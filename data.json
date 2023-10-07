@@ -1,0 +1,9 @@
+{
+    "homeGroup": {
+        "btn1": {
+            "type":"button",
+            "label":"button 1",
+            "content":"copy text to clipboard test"
+        }
+    }
+}
