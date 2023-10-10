@@ -1,26 +1,26 @@
 {
     "e3e1fe0a-67b6-11ee-8c99-0242ac120002": {
-        "type": "group",
+        "group": true,
         "label": "home",
         "content": {
-            "btn1": {
-                "type": "button",
+            "038f7c44-67c3-11ee-8c99-0242ac120002": {
+                "group": false,
                 "label": "button 1",
                 "content": "copy text to clipboard test"
             },
-            "btn2": {
-                "type": "button",
+            "038f7d48-67c3-11ee-8c99-0242ac120002": {
+                "group": false,
                 "label": "button 1",
                 "content": "copy text to clipboard test"
             }
         }
     },
     "e3e202ba-67b6-11ee-8c99-0242ac120002": {
-        "type": "group",
+        "group": true,
         "label": "group2",
         "content": {
-            "btn1": {
-                "type": "button",
+            "038f7e4c-67c3-11ee-8c99-0242ac120002": {
+                "group": false,
                 "label": "2nd group button 1",
                 "content": "copy text to clipboard test 2"
             }

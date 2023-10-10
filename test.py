@@ -6,11 +6,11 @@ import json
 with open("data.json","r") as f:
     data = json.load(f)
 
-try:
-    for k in data.keys():
-        print(k)
-except:
-    print("couldn't find specified data")
+# try:
+#     for k in data.keys():
+#         print(k)
+# except:
+#     print("couldn't find specified data")
 
 root = tk.Tk()
 root.geometry("500x500")
@@ -41,11 +41,20 @@ def popupmsg(msg):
     label.pack()
     popup.mainloop()
 
-def createButton(txt):
+def createButton(buttonID):
     global btnCount
+    # print("buttonID",buttonID)
+    # print("btnCount",btnCount)
+    txt = data[buttonID]['label']
     btnLabel = tk.Label(buttonFrame,text=str(btnCount+1)+".",compound="left")
     btnLabel.grid(row=btnCount,column=0,sticky=tk.W+tk.E,pady=2)
-    btn = ttk.Button(buttonFrame, style="Custom.TButton",compound="left",text=txt, command=lambda : popupmsg(txt)) 
+    
+    if (data[buttonID]['group']):
+        btn = ttk.Button(buttonFrame, style="Custom.TButton",compound="left",text=txt, command=lambda : switchGroup(buttonID)) 
+    else:
+        content = data[buttonID]['content']
+        btn = ttk.Button(buttonFrame, style="Custom.TButton",compound="left",text=txt, command=lambda : popupmsg(content)) 
+    
     btn.grid(row=btnCount,column=1,sticky=tk.W+tk.E,pady=2)
     btnCount = btnCount + 1
 
@@ -56,18 +65,21 @@ def removeButtons():
     for l in list:
         l.destroy()
 
-# def switchGroup(group):
-    
+def switchGroup(groupID):
+    # print(groupID)
+    removeButtons()
+    group = data[groupID]['content']
+    for item in group:
+        print("item",item)
+        createButton(item)
 
 # # Execute Code!
 # btnCount=0
 
-print(buttonFrame)
-btnCount=0
 # Initial Button Population
+btnCount=0
 for k in data.keys():
-    val = data[k]['label']
-    createButton(val)
+    createButton(k)
 
 buttonFrame.pack(fill='x')
 
