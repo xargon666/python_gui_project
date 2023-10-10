@@ -6,4 +6,11 @@
             "content":"copy text to clipboard test"
         }
     }
+    , "2nd Group":{
+        "btn1":{
+            "type":"button",
+            "label":"2nd group button 1",
+            "content":"copy text to clipboard test 2"
+        }
+    }
 }
