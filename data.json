@@ -1,16 +1,29 @@
 {
-    "homeGroup": {
-        "btn1": {
-            "type":"button",
-            "label":"button 1",
-            "content":"copy text to clipboard test"
+    "e3e1fe0a-67b6-11ee-8c99-0242ac120002": {
+        "type": "group",
+        "label": "home",
+        "content": {
+            "btn1": {
+                "type": "button",
+                "label": "button 1",
+                "content": "copy text to clipboard test"
+            },
+            "btn2": {
+                "type": "button",
+                "label": "button 1",
+                "content": "copy text to clipboard test"
+            }
         }
-    }
-    , "2nd Group":{
-        "btn1":{
-            "type":"button",
-            "label":"2nd group button 1",
-            "content":"copy text to clipboard test 2"
+    },
+    "e3e202ba-67b6-11ee-8c99-0242ac120002": {
+        "type": "group",
+        "label": "group2",
+        "content": {
+            "btn1": {
+                "type": "button",
+                "label": "2nd group button 1",
+                "content": "copy text to clipboard test 2"
+            }
         }
     }
 }
