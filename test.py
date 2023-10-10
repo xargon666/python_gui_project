@@ -2,11 +2,14 @@ import tkinter as tk
 from tkinter import ttk
 import json
 
-data = ""
-with open("data.json","r") as data:
-    data = data.read()
+with open("data.json","r") as f:
+    data = json.load(f)
 
-print(data)
+try:
+    for k in data.keys():
+        print(k)
+except:
+    print("couldn't find specified data")
 
 root = tk.Tk()
 root.geometry("500x500")
@@ -18,7 +21,7 @@ root.tk.call('source', 'Forest-ttk-theme-master\\forest-dark.tcl')
 # Set the theme with the theme_use method
 ttk.Style().theme_use('forest-dark')
 
-label = tk.Label(root, text="Hello World!", font=('Arial', 18, 'bold')) # create a labal
+label = ttk.Label(root, text="Hello World!", font=('Arial', 18, 'bold')) # create a labal
 label.pack(padx=20, pady=20) # add the label, and padding
 
 # textbox = tk.Text(root, height=3, font=('Arial',16)) # create a text input box
@@ -32,13 +35,13 @@ buttonFrame.columnconfigure(1,weight=11)
 def popupmsg(msg):
     popup = tk.Tk()
     popup.title("Notification")
-    label = tk.Label(popup, text=msg)
+    label = ttk.Label(popup, text=msg)
     label.pack()
     popup.mainloop()
 
 def createButton(txt):
     global btnCount
-    btnLabel = tk.Label(buttonFrame,text=txt+".")
+    btnLabel = tk.Label(buttonFrame,text=btnCount+1)
     btnLabel.grid(row=btnCount,column=0,sticky=tk.W+tk.E,pady=2)
     btn = ttk.Button(buttonFrame, text=txt, command=lambda : popupmsg(txt)) # ttk styled button
     # btn = tk.Button(buttonFrame, text=txt,font=('Arial',12), command=lambda : popupmsg(txt))
@@ -46,10 +49,10 @@ def createButton(txt):
     btnCount = btnCount + 1
 
 btnCount=0
-createButton("1")
-createButton("2")
-createButton("3")
-createButton("4")
+
+for k in data.keys():
+    createButton(k)
+
 # btn1 = tk.Button(buttonFrame, text="1",font=('Arial', 12))
 # btn1.grid(row=0,column=0,sticky=tk.W+tk.E)
 
