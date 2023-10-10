@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import uuid
 import json
 
 with open("data.json","r") as f:
@@ -24,13 +25,14 @@ ttk.Style().theme_use('forest-dark')
 label = ttk.Label(root, text="Hello World!", font=('Arial', 18, 'bold')) # create a labal
 label.pack(padx=20, pady=20) # add the label, and padding
 
-# textbox = tk.Text(root, height=3, font=('Arial',16)) # create a text input box
-# textbox.pack(padx=20)
-
 buttonFrame = tk.Frame(root)
 buttonFrame.pack(padx=20, pady=20)
 buttonFrame.columnconfigure(0,weight=1)
-buttonFrame.columnconfigure(1,weight=11)
+buttonFrame.columnconfigure(1,weight=10)
+buttonFrame.columnconfigure(2,weight=1)
+
+style = ttk.Style()
+style.configure("Custom.TButton",padding=(10,5),anchor='w')
 
 def popupmsg(msg):
     popup = tk.Tk()
@@ -41,35 +43,31 @@ def popupmsg(msg):
 
 def createButton(txt):
     global btnCount
-    btnLabel = tk.Label(buttonFrame,text=btnCount+1)
+    btnLabel = tk.Label(buttonFrame,text=str(btnCount+1)+".",compound="left")
     btnLabel.grid(row=btnCount,column=0,sticky=tk.W+tk.E,pady=2)
-    btn = ttk.Button(buttonFrame, text=txt, command=lambda : popupmsg(txt)) # ttk styled button
-    # btn = tk.Button(buttonFrame, text=txt,font=('Arial',12), command=lambda : popupmsg(txt))
+    btn = ttk.Button(buttonFrame, style="Custom.TButton",compound="left",text=txt, command=lambda : popupmsg(txt)) 
     btn.grid(row=btnCount,column=1,sticky=tk.W+tk.E,pady=2)
     btnCount = btnCount + 1
 
+def removeButtons():
+    global btnCount
+    btnCount=0
+    list = buttonFrame.pack_slaves()
+    for l in list:
+        l.destroy()
+
+# def switchGroup(group):
+    
+
+# # Execute Code!
+# btnCount=0
+
+print(buttonFrame)
 btnCount=0
-
+# Initial Button Population
 for k in data.keys():
-    createButton(k)
-
-# btn1 = tk.Button(buttonFrame, text="1",font=('Arial', 12))
-# btn1.grid(row=0,column=0,sticky=tk.W+tk.E)
-
-# btn2 = tk.Button(buttonFrame, text="2",font=('Arial', 12))
-# btn2.grid(row=0,column=1,sticky=tk.W+tk.E)
-
-# btn3 = tk.Button(buttonFrame, text="3",font=('Arial', 12))
-# btn3.grid(row=0,column=2,sticky=tk.W+tk.E)
-
-# btn4 = tk.Button(buttonFrame, text="4",font=('Arial', 12))
-# btn4.grid(row=1,column=0,sticky=tk.W+tk.E)
-
-# btn5 = tk.Button(buttonFrame, text="5",font=('Arial', 12))
-# btn5.grid(row=1,column=1,sticky=tk.W+tk.E)
-
-# btn6 = tk.Button(buttonFrame, text="6",font=('Arial', 12))
-# btn6.grid(row=1,column=2,sticky=tk.W+tk.E)
+    val = data[k]['label']
+    createButton(val)
 
 buttonFrame.pack(fill='x')
 
