@@ -1,29 +1,39 @@
 {
-    "e3e1fe0a-67b6-11ee-8c99-0242ac120002": {
+    "eb4e70c4-6865-11ee-8c99-0242ac120002": {
+        "parent": "",
         "group": true,
-        "label": "home",
-        "content": {
-            "038f7c44-67c3-11ee-8c99-0242ac120002": {
-                "group": false,
-                "label": "button 1",
-                "content": "copy text to clipboard test"
-            },
-            "038f7d48-67c3-11ee-8c99-0242ac120002": {
-                "group": false,
-                "label": "button 1",
-                "content": "copy text to clipboard test"
-            }
-        }
+        "label": "group 1",
+        "content": ""
     },
-    "e3e202ba-67b6-11ee-8c99-0242ac120002": {
+    "eb4e7416-6865-11ee-8c99-0242ac120002": {
+        "parent": "eb4e70c4-6865-11ee-8c99-0242ac120002",
+        "group": false,
+        "label": "Button 1",
+        "content": "test string 1"
+    },
+    "eb4e7722-6865-11ee-8c99-0242ac120002": {
+        "parent": "eb4e70c4-6865-11ee-8c99-0242ac120002",
+        "group": false,
+        "label": "Button 2",
+        "content": "test string 2"
+    },
+
+    "eb4e78b2-6865-11ee-8c99-0242ac120002": {
+        "parent": "",
         "group": true,
-        "label": "group2",
-        "content": {
-            "038f7e4c-67c3-11ee-8c99-0242ac120002": {
-                "group": false,
-                "label": "2nd group button 1",
-                "content": "copy text to clipboard test 2"
-            }
-        }
+        "label": "group 2",
+        "content": ""
+    },
+    "eb4e7a38-6865-11ee-8c99-0242ac120002": {
+        "parent": "eb4e78b2-6865-11ee-8c99-0242ac120002",
+        "group": false,
+        "label": "Button 3",
+        "content": "test string 3"
+    },
+    "p99c816a4-6867-11ee-8c99-0242ac120002": {
+        "parent": "",
+        "group": true,
+        "label": "group 3",
+        "content": ""
     }
 }
