@@ -23,7 +23,7 @@ root.tk.call('source', 'Forest-ttk-theme-master\\forest-dark.tcl')
 # Set the theme with the theme_use method
 ttk.Style().theme_use('forest-dark')
 
-label = ttk.Label(root, text="Hello World!", font=('Arial', 18, 'bold')) # create a labal
+label = ttk.Label(root, text="Snippet Stockpile", font=('Arial', 18, 'bold')) # create a labal
 label.pack(padx=20, pady=20) # add the label, and padding
 
 buttonFrame = tk.Frame(root)
