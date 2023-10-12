@@ -26,6 +26,12 @@ ttk.Style().theme_use('forest-dark')
 label = ttk.Label(root, text="Snippet Stockpile", font=('Arial', 18, 'bold')) # create a labal
 label.pack(padx=20, pady=20) # add the label, and padding
 
+controlFrame = tk.Frame(root)
+controlFrame.pack(padx=20,pady=10)
+controlFrame.columnconfigure(0,weight=1)
+controlFrame.columnconfigure(1,weight=1)
+controlFrame.columnconfigure(2,weight=1)
+controlFrame.columnconfigure(3,weight=1)
 buttonFrame = tk.Frame(root)
 buttonFrame.pack(padx=20, pady=10)
 buttonFrame.columnconfigure(0)
