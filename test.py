@@ -27,10 +27,10 @@ label = ttk.Label(root, text="Snippet Stockpile", font=('Arial', 18, 'bold')) # 
 label.pack(padx=20, pady=20) # add the label, and padding
 
 buttonFrame = tk.Frame(root)
-buttonFrame.pack(padx=20, pady=20)
-buttonFrame.columnconfigure(0,weight=1)
-buttonFrame.columnconfigure(1,weight=10)
-buttonFrame.columnconfigure(2,weight=1)
+buttonFrame.pack(padx=20, pady=10)
+buttonFrame.columnconfigure(0)
+buttonFrame.columnconfigure(1,weight=1)
+buttonFrame.columnconfigure(2)
 
 style = ttk.Style()
 style.configure("Custom.TButton",padding=(10,5),anchor='w')
