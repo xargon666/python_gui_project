@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import uuid
 import json
+import pyperclip as pc
 
 with open("data.json","r") as f:
     data = json.load(f)
