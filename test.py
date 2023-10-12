@@ -43,12 +43,13 @@ def popupmsg(msg):
 
 def createButton(buttonID):
     global btnCount
-    # print("buttonID",buttonID)
-    # print("btnCount",btnCount)
+
+    # LABEL
     txt = data[buttonID]['label']
     btnLabel = tk.Label(buttonFrame,text=str(btnCount+1)+".",compound="left")
     btnLabel.grid(row=btnCount,column=0,sticky=tk.W+tk.E,pady=2)
     
+    # COMMAND
     if (data[buttonID]['group']):
         btn = ttk.Button(buttonFrame, style="Custom.TButton",compound="left",text=txt, command=lambda : switchGroup(buttonID)) 
     else:
@@ -61,26 +62,35 @@ def createButton(buttonID):
 def removeButtons():
     global btnCount
     btnCount=0
-    list = buttonFrame.pack_slaves()
-    for l in list:
-        l.destroy()
+    print('buttonFrame children',buttonFrame.winfo_children())
+    for widgets in buttonFrame.winfo_children():
+        widgets.destroy()
 
 def switchGroup(groupID):
     # print(groupID)
     removeButtons()
-    group = data[groupID]['content']
-    for item in group:
-        print("item",item)
-        createButton(item)
+    for k in data.keys():
+        if (data[k]['parent']==groupID):
+            createButton(k)
 
-# # Execute Code!
-# btnCount=0
+def createBackButton(grandParentID):
+    if (grandParentID == ""):
+        createFirstGroupButtons()
+    else:
+        createGroupButtons(grandParentID)
+
+def createFirstGroupButtons():
+    for k in data.keys():
+        if (data[k]['parent'] == ""):
+            createButton(k)
+
+def createGroupButtons(groupID):
+    for k in data.keys():
+        if (data[k]['parent'] == groupID):
+            createButton(k)
 
 # Initial Button Population
 btnCount=0
-for k in data.keys():
-    createButton(k)
-
 buttonFrame.pack(fill='x')
-
-root.mainloop() # this bit makes it render I think
+createFirstGroupButtons()
+root.mainloop() # this bit makes it render
