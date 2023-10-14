@@ -4,13 +4,14 @@ import uuid
 import json
 import pyperclip as pc
 
-# Globals ==================================================================================
+# Globals =====================================================================================
 btnCount=0
-def main():
-# ==========================================================================================
-# FUNCTIONS ================================================================================
-# ==========================================================================================
 
+# Main =====================================================================================
+def main():
+# =====================================================================================
+# FUNCTIONS =====================================================================================
+# ==========================================================================================
     def popupmsg(msg):
         popup = tk.Tk()
         popup.title("Notification")
@@ -24,6 +25,8 @@ def main():
         for widgets in buttonFrame.winfo_children():
             widgets.destroy()
         for widgets in controlFrame.winfo_children():
+            widgets.destroy()
+        for widgets in controlFrame2.winfo_children():
             widgets.destroy()
         createControlButtons()
         
@@ -57,7 +60,7 @@ def main():
         btnLabel.grid(row=btnCount-1,column=0,sticky=tk.W+tk.E,pady=2)
 
         # EDIT BUTTON
-        editBtn = ttk.Button(buttonFrame, text="🖊",width=0)
+        editBtn = ttk.Button(buttonFrame, text="🖊",width=0, command=lambda:createForm(buttonID))
         editBtn.grid(row=btnCount-1,column=2,pady=2,padx=4)
         
         # BUTTON WITH COMMAND
@@ -67,20 +70,24 @@ def main():
             content = data[buttonID]['content']
             btn = ttk.Button(buttonFrame, style="Custom.TButton",compound="left",text=txt, command=lambda : pc.copy(content))
         root.bind(btnCount, lambda event, button=btn: btn.invoke()) # I don't understand why this works but it does
-        btn.grid(row=btnCount-1,column=1,sticky=tk.W+tk.E,pady=2)
-
-    def createBackButton(grandParentID):
-        btn = ttk.Button(controlFrame, text="Back", command=lambda : backButton(grandParentID))
-        root.bind('b',lambda event, button=btn: btn.invoke())
-        btn.grid(row=0,column=3,padx=10,sticky=tk.E)
+        btn.grid(row=btnCount-1,column=1,sticky='we',pady=2)
 
     def createAddButton():
-        btn = ttk.Button(controlFrame, text="Add", command=lambda : popupmsg("test"))
-        btn.grid(row=0,column=0,padx=10,sticky="W")
+        btn = ttk.Button(controlFrame, text="Add", command=lambda : createForm())
+        btn.grid(row=0,column=0,padx=0,sticky="W")
 
     def createOptionsButton():
         btn = ttk.Button(controlFrame, text="Options", command=lambda : popupmsg("test"))
-        btn.grid(row=0,column=2,padx=10,sticky="W")
+        btn.grid(row=0,column=1,padx=10,sticky="W")
+
+    def createBackButton(grandParentID):
+        btn = ttk.Button(controlFrame2, text="Back", command=lambda : backButton(grandParentID))
+        root.bind('b',lambda event, button=btn: btn.invoke())
+        btn.grid(row=0,column=0,sticky="E")
+
+    # def createSpacer():
+    #     spacer_label = ttk.Label(controlFrame, text="", width=10)
+    #     spacer_label.grid(row=0, column=0)
 
     def createFirstGroupButtons():
         for k in data.keys():
@@ -96,20 +103,75 @@ def main():
         #further logic to come for action when not a group?
 
     def createControlButtons():
+        # createSpacer()
         createAddButton()
         createOptionsButton()
 
     ## NEW/EDIT DATA FORM
+    def createForm(buttonID=""):
+        removeButtons()
+        buttonName=""
+        buttonContent=""
+        group = False
+        chkvar=tk.IntVar()
+        if buttonID:
+            buttonName=data[buttonID]['label']
+            buttonContent=data[buttonID]['content']
+            if (data[buttonID]['group']):
+                group=True
+                chkvar.set(1)
+            
 
+        def checkboxFunction():
+            global group
+            if(chkvar.get()==0):
+                e2.config( state ='enabled') 
+                group = False
+            elif(chkvar.get()==1):
+                e2.config( state ='disabled') 
+                group = True
     # button name
         # field label
+        l1 = tk.Label(buttonFrame,text="Button Name: ")
         # input field
+        e1 = ttk.Entry(
+            buttonFrame,
+            width=100
+        )
+        e1.insert(0,buttonName)
+        
     # button current content
         # field label
+        l2 = tk.Label(buttonFrame,text="Content: ")
         # input field
+
+        e2 = ttk.Entry(
+            buttonFrame,
+            width=100
+        )
+        e2.insert(0,buttonContent)
+        
     # is a group?
-    # dropdown menu to select group
-        # greyed out if group not true
+        l3 = tk.Label(buttonFrame,text="Button Group: ")
+        ch = ttk.Checkbutton(buttonFrame,variable=chkvar, onvalue=1, offvalue=0, command=checkboxFunction)
+        
+    # dropdown menu to select groupw
+        l4 = tk.Label(buttonFrame,text="Location: ")
+        dp = tk.Listbox(buttonFrame)
+    
+    # position form elements
+        l1.grid(row=0,column=0,sticky="E")
+        e1.grid(row=0,column=1,sticky="W",columnspan=3)
+        
+        l2.grid(row=1,column=0,sticky="E")
+        e2.grid(row=1,column=1,sticky="W",columnspan=3)
+        
+        l3.grid(row=2,column=0,sticky="E")
+        ch.grid(row=2,column=1,sticky="W")
+        
+        l4.grid(row=3,column=0,sticky="NE")
+        dp.grid(row=3,column=1,sticky="W")
+
 
 # ==========================================================================================
 # SETUP AND LAUNCH =========================================================================
@@ -124,25 +186,91 @@ def main():
 
     # Import the tcl file
     root.tk.call('source', 'Forest-ttk-theme-master\\forest-dark.tcl')
-
+    
+    # Configure root to expand in both rows and columns
+    root.rowconfigure(0)
+    root.rowconfigure(1)
+    root.grid_columnconfigure(0, weight=1)
+    
     # Set the theme with the theme_use method
     ttk.Style().theme_use('forest-dark')
 
-    label = ttk.Label(root, text="Snippet Stockpile", font=('Arial', 18, 'bold')) # create a labal
-    label.pack(padx=20, pady=20) # add the label, and padding
+    header = tk.Frame(
+                root, 
+        borderwidth=1, 
+        relief="solid"
+    )
+    header.grid(
+        row=0,
+        column=0, 
+        padx=10, 
+        pady=10, 
+        sticky="nsew"
+    )
+    header.columnconfigure(0, weight=1)
+    
+    body = tk.Frame(
+                root, 
+        borderwidth=1, 
+        relief="solid"
+    )
+    body.grid(
+        row=1,
+        column=0, 
+        padx=10, 
+        pady=10, 
+        sticky="nsew"
+    )
+    body.columnconfigure(0, weight=1)
+    
+    label = ttk.Label(
+        header, 
+        text="Snippet Stockpile", 
+        font=('Arial', 18, 'bold'), 
+        borderwidth=1, 
+        relief="solid"
+    )
+    label.grid(row=0, column=0, padx=10, pady=10)
 
-    controlFrame = tk.Frame(root)
-    controlFrame.pack(padx=20,pady=10)
+    controlFrame = tk.Frame(
+        body,
+        width=100,
+        borderwidth=1, 
+        relief="solid"
+    )
+    controlFrame.grid(
+        row=1,
+        column=0, 
+        padx=10, 
+        pady=10, 
+        sticky="w"
+    )
     controlFrame.columnconfigure(0,weight=1)
     controlFrame.columnconfigure(1,weight=1)
     controlFrame.columnconfigure(2,weight=1)
     controlFrame.columnconfigure(3,weight=1)
 
-    buttonFrame = tk.Frame(root)
-    buttonFrame.pack(padx=20, pady=10)
-    buttonFrame.columnconfigure(0)
-    buttonFrame.columnconfigure(1,weight=1)
-    buttonFrame.columnconfigure(2)
+    controlFrame2=tk.Frame(
+        body
+    )
+    controlFrame2.grid(
+        row=1,
+        column=1,
+        sticky='e'
+    )
+    
+    buttonFrame = tk.Frame(body, borderwidth=1, relief="solid")
+    buttonFrame.grid(
+        row=2, 
+        column=0,
+        columnspan=2,
+        padx=10, 
+        pady=10, 
+        sticky="ew"
+    )
+    buttonFrame.grid_columnconfigure(0)
+    buttonFrame.grid_columnconfigure(1,weight=1)
+    buttonFrame.grid_columnconfigure(2)
 
     style = ttk.Style()
     style.configure("Custom.TButton",anchor='w')
@@ -152,7 +280,6 @@ def main():
 
     # Initial Button Population
     
-    buttonFrame.pack(fill='x')
     createFirstGroupButtons()
     createControlButtons()
     # createBindings()
