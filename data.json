@@ -17,7 +17,6 @@
         "label": "Button 2",
         "content": "test string 2"
     },
-
     "eb4e78b2-6865-11ee-8c99-0242ac120004": {
         "parent": "",
         "group": true,
@@ -34,6 +33,30 @@
         "parent": "",
         "group": true,
         "label": "group 3",
+        "content": ""
+    },
+    "eaa6ef3f-70f5-11ee-b7b8-847b57cf49fe": {
+        "parent": "13e03c7e-70f7-11ee-808c-847b57cf49fe",
+        "group": false,
+        "label": "new button test 4",
+        "content": "new button text 4"
+    },
+    "49de2375-70f6-11ee-afce-847b57cf49fe": {
+        "parent": "13e03c7e-70f7-11ee-808c-847b57cf49fe",
+        "group": false,
+        "label": "new button test 5",
+        "content": "test button text 5"
+    },
+    "05164d03-70f7-11ee-b6e0-847b57cf49fe": {
+        "parent": "13e03c7e-70f7-11ee-808c-847b57cf49fe",
+        "group": false,
+        "label": "new button test 6",
+        "content": "omsdfoksdfoisjdopfjs"
+    },
+    "13e03c7e-70f7-11ee-808c-847b57cf49fe": {
+        "parent": "",
+        "group": true,
+        "label": "new group test",
         "content": ""
     }
 }

@@ -6,7 +6,9 @@ import pyperclip as pc
 
 # Globals =====================================================================================
 btnCount=0
-
+groupSelection=False
+listboxDict={}
+selectedGroup=0
 # Main =====================================================================================
 def main():
 # =====================================================================================
@@ -33,25 +35,18 @@ def main():
         removeButtons()
         createGroupButtons(buttonID)
 
-    def backButton(groupID=""):
+    def backButton(grandParentID=""):
         global data
         removeButtons()
-        if groupID:
-            parentID = data[groupID]['parent']
-            if (parentID != ""):
-                grandParentID = data[parentID]['parent']
-            else:
-                grandParentID = ""
-            if (grandParentID == ""):
-                createFirstGroupButtons()
-            else:
-                createGroupButtons(grandParentID)
+        if grandParentID:
+            createGroupButtons(grandParentID)
         else:
             createFirstGroupButtons()
-            
+
 #################################################################################################################################
 # CREATE BUTTONS ################################################################################################################ 
 #################################################################################################################################
+
     def createButton(buttonID):
         global btnCount
         global data
@@ -89,7 +84,7 @@ def main():
             btn = ttk.Button(controlFrame2, text="Back", command=lambda : backButton(grandParentID))
         else:
             btn = ttk.Button(controlFrame2, text="Back", command=lambda : backButton())
-        root.bind('b',lambda event, button=btn: btn.invoke())
+        root.bind('<Escape>',lambda event, button=btn: btn.invoke())
         btn.grid(row=0,column=0,sticky="E")
 
     # def createSpacer():
@@ -109,7 +104,8 @@ def main():
         createControlButtons()
         if data:
             if (data[groupID]['group']):
-                createBackButton(groupID)
+                grandParentID = data[groupID]['parent']
+                createBackButton(grandParentID)
                 for k in data.keys():
                     if (data[k]['parent'] == groupID):
                         createButton(k)
@@ -120,13 +116,19 @@ def main():
         createAddButton()
         createOptionsButton()
 
-    def createSubmitButton(buttonID,e1,e2,parentID):
-        btn = ttk.Button(controlFrame,text="Submit",command=lambda: submitForm(buttonID,e1,e2,parentID))
+    def createSubmitButton(buttonID,e1,e2,dp):
+        btn = ttk.Button(controlFrame,text="Submit",command=lambda: submitForm(
+            buttonID,
+            e1,
+            e2,
+            dp            
+        ))
         btn.grid(row=0,column=0)
 # ==========================================================================================
 # NEW/EDIT DATA FORM  ======================================================================
 # ==========================================================================================
     def createForm(buttonID=""):
+        global listboxDict
         global data
         removeButtons()
         buttonName=""
@@ -144,15 +146,18 @@ def main():
                 chkvar.set(1)
         else:
             newID = uuid.uuid1()
-            buttonID = newID
+            buttonID = str(newID)
                         
         def checkboxFunction():
             global group
+            global groupSelection
             if(chkvar.get()==0):
                 e2.config( state ='enabled') 
+                groupSelection = False
                 group = False
             elif(chkvar.get()==1):
                 e2.config( state ='disabled') 
+                groupSelection = True
                 group = True
                 
         l1 = tk.Label(buttonFrame,text="Button Name: ")
@@ -163,9 +168,21 @@ def main():
         e2.insert(0,buttonContent)
         l3 = tk.Label(buttonFrame,text="Button Group: ")
         ch = ttk.Checkbutton(buttonFrame,variable=chkvar, onvalue=1, offvalue=0, command=checkboxFunction)
-        l4 = tk.Label(buttonFrame,text="Location: ")
+        
+        # listbox
+        l4 = tk.Label(buttonFrame,text="Parent Group: ")
         dp = tk.Listbox(buttonFrame)
-    
+        listboxDict.clear()
+        i = 0
+        dp.insert(i,'root')
+        for key in data.keys():
+            if data[key]['group']:
+                i=i+1
+                dp.insert(i,data[key]['label'])
+                listItem = {'label':data[key]['label'],'index':i}
+                listboxDict[key] = listItem
+        print(listboxDict)
+        
     # position form elements
         l1.grid(row=0,column=0,sticky="E")
         e1.grid(row=0,column=1,sticky="W",columnspan=3)
@@ -178,23 +195,47 @@ def main():
         
         l4.grid(row=3,column=0,sticky="NE")
         dp.grid(row=3,column=1,sticky="W")
-        createSubmitButton(buttonID,e1,e2,parentID)
+        
+        if buttonID in data:
+            if data[buttonID]['parent']:
+                for key in listboxDict.keys():
+                    if data[buttonID]['parent'] == key:
+                        activateListboxItem(dp,listboxDict[key]['index'])
+            else:
+                activateListboxItem(dp,0)
+        else:
+            activateListboxItem(dp,0)
+            
+        createSubmitButton(buttonID,e1,e2,dp)
         createBackButton()
 
-    def submitForm(buttonID,e1,e2,parentID):
+    def activateListboxItem(listbox,index):
+        if index <= listbox.size():
+            print("making selection...")
+            listbox.select_set(index)
+            # for some reason the activate method doesn't work here
+            
+    def submitForm(buttonID,e1,e2,dp):
         global data
-        data[buttonID]["parent"]=parentID
-
-        if parentID:
-            data[buttonID]["group"]=True
+        global groupSeletion
+        parentID = ""
+        selectionIndex = dp.curselection()[0]
+        for key in listboxDict.keys():
+            if listboxDict[key]['index'] == selectionIndex:
+                parentID = key
+                print("Setting parentID value to: ", key)
+        newData = dict()
+        newData["parent"]=parentID
+        if groupSelection:
+            newData["group"]=True
         else:
-            data[buttonID]["group"]=False
-        data[buttonID]["label"]=e1.get()
-        data[buttonID]["content"]=e2.get()
-        print("test1",type(data))
-        writeData(data) 
+            newData["group"]=False
+        newData["label"]=e1.get()
+        newData["content"]=e2.get()
+        data[buttonID] = newData
+        writeData(data)
+        backButton()
         
-
 # ==========================================================================================
 # SETUP AND LAUNCH =========================================================================
 # ==========================================================================================
@@ -206,14 +247,11 @@ def main():
             data = json.load(f)
             
     def writeData(data):
-        print(type(data))
         json_data = json.dumps(data,indent=4)
-        print(type(json_data))
         with open("data.json","w", encoding='utf-8') as json_file:
             json_file.write(json_data)
             
     readData()
-    print(data)
     root = tk.Tk()
     root.geometry("500x500")
     root.title("test")
@@ -315,7 +353,7 @@ def main():
     style.configure("Center.TButton",anchor='w',padding=(5,1,5,5))
 
     # BUTTON LOGIC
-    root.bind('<Escape>', quit)
+#    root.bind('<Escape>', quit)
 
     # Initial Button Population
     
