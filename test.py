@@ -4,22 +4,85 @@ import uuid
 import json
 import pyperclip as pc
 
-# Globals =====================================================================================
+# Globals =============================================================================
 btnCount=0
 groupSelection=False
 listboxDict={}
 selectedGroup=0
-# Main =====================================================================================
+# Main ================================================================================
 def main():
 # =====================================================================================
-# FUNCTIONS =====================================================================================
-# ==========================================================================================
-    def popupmsg(msg):
+# FUNCTIONS ===========================================================================
+# =====================================================================================
+    def readData():
+        global data
+        with open("data.json","r") as f:
+            data = json.load(f)
+            
+    def writeData(data):
+        json_data = json.dumps(data,indent=4)
+        with open("data.json","w", encoding='utf-8') as json_file:
+            json_file.write(json_data)
+
+    def close(win):
+        win.destroy()
+        returnHome()
+
+    def deleteDataPopup(title,msg,buttonID,group):
         popup = tk.Tk()
-        popup.title("Notification")
-        label = ttk.Label(popup, text=msg)
-        label.pack()
-        popup.mainloop()
+        popup.tk.call('source', 'Forest-ttk-theme-master\\forest-dark.tcl')
+        ttk.Style().theme_use('forest-dark')
+        popup.title(title)
+        label = tk.Label(popup, text=msg)
+        if group:
+            popup.geometry("370x90") 
+            yesBtn = ttk.Button(popup,text="Yes",style='Custom.TButton',command=lambda: deleteGroup(buttonID,popup))
+        else:
+            popup.geometry("275x90") 
+            yesBtn = ttk.Button(popup,text="Yes",style='Custom.TButton',command=lambda: deleteRecord(buttonID,popup))
+        noBtn = ttk.Button(popup,text="No",command=lambda: close(popup))
+        label.grid(row=0,column=0,sticky="EW",padx=5,pady=10,columnspan=2)
+        yesBtn.grid(row=1,column=0)
+        noBtn.grid(row=1,column=1)
+   
+    def createDeleteButton(buttonID):
+        global data
+        if data[buttonID]['group']:
+            delBtn = ttk.Button(controlFrame,text="Delete",command= lambda:
+            deleteDataPopup(
+                "Delete Entry",
+                "Are you sure you want to delete this group and it's contents?",
+                buttonID,True)
+                )
+        else:
+            delBtn = ttk.Button(controlFrame,text="Delete",command= lambda:
+            deleteDataPopup(
+                "Delete Entry",
+                "Are you sure you want to delete this button?",
+                buttonID,False)
+                )
+        delBtn.grid(row=0,column=1,padx=5)
+
+    def deleteRecord(buttonID,popup):
+        global data
+        del data[buttonID]
+        writeData(data)
+        close(popup)
+        returnHome()
+    
+    def deleteGroup(buttonID,popup):
+        global data
+        for key in list(data.keys()):
+            if data[key]['parent'] == buttonID:
+                del data[key]
+        del data[buttonID]
+        writeData(data)
+        close(popup)
+        returnHome()
+        
+    def returnHome():
+        removeButtons()
+        createFirstGroupButtons()
 
     def removeButtons():
         global btnCount
@@ -43,9 +106,9 @@ def main():
         else:
             createFirstGroupButtons()
 
-#################################################################################################################################
-# CREATE BUTTONS ################################################################################################################ 
-#################################################################################################################################
+#######################################################################################
+# CREATE BUTTONS ######################################################################
+#######################################################################################
 
     def createButton(buttonID):
         global btnCount
@@ -207,6 +270,7 @@ def main():
             activateListboxItem(dp,0)
             
         createSubmitButton(buttonID,e1,e2,dp)
+        createDeleteButton(buttonID)
         createBackButton()
 
     def activateListboxItem(listbox,index):
@@ -241,15 +305,6 @@ def main():
 # ==========================================================================================
     data = dict()
     
-    def readData():
-        global data
-        with open("data.json","r") as f:
-            data = json.load(f)
-            
-    def writeData(data):
-        json_data = json.dumps(data,indent=4)
-        with open("data.json","w", encoding='utf-8') as json_file:
-            json_file.write(json_data)
             
     readData()
     root = tk.Tk()
@@ -267,11 +322,7 @@ def main():
     # Set the theme with the theme_use method
     ttk.Style().theme_use('forest-dark')
 
-    header = tk.Frame(
-                root, 
-        # borderwidth=1, 
-        # relief="solid"
-    )
+    header = tk.Frame(root)
     header.grid(
         row=0,
         column=0, 
@@ -281,11 +332,7 @@ def main():
     )
     header.columnconfigure(0, weight=1)
     
-    body = tk.Frame(
-                root, 
-        # borderwidth=1, 
-        # relief="solid"
-    )
+    body = tk.Frame(root)
     body.grid(
         row=1,
         column=0, 
@@ -298,17 +345,13 @@ def main():
     label = ttk.Label(
         header, 
         text="Snippet Stockpile", 
-        font=('Arial', 18, 'bold'), 
-        # borderwidth=1, 
-        # relief="solid"
+        font=('Arial', 18, 'bold')
     )
     label.grid(row=0, column=0, padx=10, pady=10)
 
     controlFrame = tk.Frame(
         body,
-        width=100,
-        # borderwidth=1, 
-        # relief="solid"
+        width=100
     )
     controlFrame.grid(
         row=1,
