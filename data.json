@@ -7,9 +7,9 @@
     },
     "eb4e7416-6865-11ee-8c99-0242ac120002": {
         "parent": "eb4e70c4-6865-11ee-8c99-0242ac120001",
-        "group": false,
-        "label": "Button 1",
-        "content": "test string 1"
+        "group": true,
+        "label": "nested group 1",
+        "content": ""
     },
     "eb4e7722-6865-11ee-8c99-0242ac120003": {
         "parent": "eb4e70c4-6865-11ee-8c99-0242ac120001",
